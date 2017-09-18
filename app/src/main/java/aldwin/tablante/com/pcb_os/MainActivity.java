@@ -3,6 +3,7 @@ package aldwin.tablante.com.pcb_os;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -20,14 +21,25 @@ public class MainActivity extends AppCompatActivity {
     boolean setter = true;
     int colorset = 0;
     int colorset2 =0;
+    private DecimalFormat temp = new DecimalFormat(",###,###,###,###,###.##");
 // PROCESSOR OBJECT
 
     public class processor {
         private int burstime;
         private int arrivaltime;
         private int servicetime;
+        private int priority;
+
         public processor() {
             super();
+        }
+
+        public int getPriority() {
+            return priority;
+        }
+
+        public void setPriority(int priority) {
+            this.priority = priority;
         }
 
         public int getBurstime() {
@@ -112,22 +124,33 @@ if(setter) {
     EditText b1 = (EditText) findViewById(R.id.ed1);
     EditText a1 = (EditText) findViewById(R.id.ed2);
     EditText s1 = (EditText) findViewById(R.id.ed3);
+    EditText p1 = (EditText) findViewById(R.id.ed4);
 
-    int burst = editText(b1);
-    int Arrival = editText(a1);
-    int service = editText(s1);
-    createProcessor(burst, Arrival, service);
-    if (tracer > 0) {
-        B.setEnabled(true);
+
+    if (b1.getText().toString().equals("") && a1.getText().toString().equals("") && s1.getText().toString().equals("")) {
+        b1.setError("Invalid");
+        a1.setError("Invalid");
+        s1.setError("Invalid");
+
+    } else {
+        int burst = editText(b1);
+        int Arrival = editText(a1);
+        int service = editText(s1);
+        createProcessor(burst, Arrival, service);
+        if (tracer > 0) {
+            B.setEnabled(true);
+        }
+        print();
+        b1.setText("");
+        b1.setHint("Burst");
+        a1.setText("");
+        a1.setHint("Arrival");
+        s1.setText("");
+        s1.setHint("Service");
+        p1.setText("");
+        p1.setHint("Prior");
+
     }
-    print();
-    b1.setText("");
-    b1.setHint("Burst Time");
-    a1.setText("");
-    a1.setHint("Arrival Time");
-    s1.setText("");
-    s1.setHint("Service Time");
-
 }
     }
 
@@ -166,10 +189,18 @@ buttonV(outputA,outputB,tracerOut,outputC);
 
 
     public void createProcessor(int y, int x , int z) {
+RadioButton prio=(RadioButton) findViewById(R.id.radio05);
+
         processor p = new processor();
         p.setArrivaltime(x);
         p.setBurstime(y);
         p.setServicetime(z);
+        if(prio.isChecked()){
+
+            EditText ed5 = (EditText) findViewById(R.id.ed4);
+            int p1 = editText(ed5);
+            p.setPriority(p1);
+        }
         arrayList.add(p);
     }
 
@@ -237,17 +268,21 @@ buttonV(outputA,outputB,tracerOut,outputC);
 
 
         int given3 = y-x;
+        if(given3 <0){
+
+            given3 = given3 * -1;
+        }
         outputAvg=Integer.toString(given3);
         outputA=Integer.toString(x);
         outputB=Integer.toString(y);
         outputIndex=Integer.toString(index+1);
-  TextView line = new TextView(this);
+        TextView line = new TextView(this);
 
         line.setText("P"+outputIndex+" : "+"               (Service:) "+outputB+" -  (Arrival:) "+outputA+ "      = " + outputAvg +" ");
         line.setBackgroundColor(Color.parseColor("Black"));
         line.setTextColor(Color.parseColor("White"));
         line.setAlpha((float)0.7);
-        line.setTextSize(20);
+        line.setTextSize(15);
 
         fin.addView(line);
 
@@ -262,7 +297,7 @@ public void finishView(double x){
     outputA = Double.toString(x);
 
     TextView line = new TextView(this);
-    line.setText("---------------- Average Waiting Time: " + outputA + " ----------------");
+    line.setText("Average Waiting Time: " + outputA);
     line.setTextSize(20);
     line.setBackgroundColor(Color.parseColor("Red"));
     line.setTextColor(Color.parseColor("White"));
@@ -275,6 +310,12 @@ public void finishView(double x){
 
 
 public void buttonV(String outputA,String outputB,String tracerOut,String outputC){
+
+RadioButton Butprio = (RadioButton) findViewById(R.id.radio05);
+
+
+
+
 
     float x = (float) 0.5;
     LinearLayout fin = (LinearLayout) findViewById(R.id.fin);
@@ -293,10 +334,26 @@ public void buttonV(String outputA,String outputB,String tracerOut,String output
     }
 
     proc.setAlpha(x);
-    proc.setTextSize(20);
+    if(Butprio.isChecked()){
 
-    proc.setText("P" + tracerOut + " : Burst TIME" + " | " + "Arrival TIME" + " | " +"Service TIME" +"\n"+
-            "                 "+outputA+"                     "+outputB+"                         "+outputC);
+        EditText p1 = (EditText) findViewById(R.id.ed4);
+        int x1 = editText(p1);
+        String prio = Integer.toString(x1) ;
+
+        proc.setTextSize(12);
+
+        proc.setText("P" + tracerOut + " : Burst TIME" + " | " + "Arrival TIME" + " | " + "Service TIME" +" | "+"Prior "+ "\n" +
+                "                 " + outputA + "                     " + outputB + "                         " + outputC+" " +
+                "              "+ prio);
+
+    }
+else {
+        proc.setTextSize(15);
+
+        proc.setText("P" + tracerOut + " : Burst TIME" + " | " + "Arrival TIME" + " | " + "Service TIME" + "\n" +
+                "                 " + outputA + "                     " + outputB + "                         " + outputC);
+    }
+
     fin.addView(proc);
 
 
@@ -307,6 +364,8 @@ public void clearValue(View v){
 LinearLayout linearParent = (LinearLayout) findViewById(R.id.finish);
     LinearLayout linearParent1 = (LinearLayout) findViewById(R.id.finish1);
     LinearLayout linearParent2 = (LinearLayout) findViewById(R.id.fin);
+   Button aya = (Button) findViewById(R.id.aya);
+    aya.setEnabled(false);
     linearParent.removeAllViews();
     linearParent1.removeAllViews();
     linearParent2.removeAllViews();
@@ -314,7 +373,6 @@ LinearLayout linearParent = (LinearLayout) findViewById(R.id.finish);
     cpuList.clear();
     colorset2=0;
     colorset=0;
-
     tracer=0;
     setter=true;
 
@@ -354,14 +412,186 @@ else{  line.setText("   ");}
 
 
 
-public void SJF(){
+public void SJF(View view) {
+
+
+    if (setter) {
+        int index = 0;
+        int sjfholder = 0;
+        double holder = 0;
+
+        double avgholder = 0;
+        int[] burst = new int[100];
+        int[] arrival = new int[100];
+        int[] service = new int[100];
+        int[] average = new int[100];
+        int indexsjf = 0;
+        int finder = 0;
+        // FOR SJF METHOD ONLY
+        while (index < tracer) {
+            processor procholder = arrayList.get(index);
+            service[index] = procholder.getServicetime();
+            sjfholder = sjfholder + service[index];
+            index++;
+        }
+        //----------------------------------------
+        index = 0;
+        while (sjfholder >= finder) {
+processor procholder;
+
+            while (indexsjf < tracer) {
+if(service[indexsjf]==finder) {
+index=indexsjf;
+
+        procholder = arrayList.get(index);
+        burst[index] = procholder.getBurstime();
+        arrival[index] = procholder.getArrivaltime();
+        service[index] = procholder.getServicetime();
+        average[index] = textV(procholder.getArrivaltime(), procholder.getServicetime(), index);
+        avgholder = (double) average[index] + avgholder;
+
+
+    colorset=index;
+        holder = burst[index] + holder;
+        v(burst[index], (int) holder);
+        burst[index] = (int) holder;
 
 
 
+
+   index++;
+
+
+}
+                indexsjf++;
+            }
+indexsjf=0;
+            finder++;
+        }
+        finishView(avgholder / tracer);
+    }
 }
 
 
 
+
+    public void radioBut1 (View view){
+
+
+        EditText prior = (EditText) findViewById(R.id.ed4);
+        prior.setVisibility(View.INVISIBLE);
+        clearValue(view);
+
+    }
+    public void radioBut2 (View view){
+
+
+        EditText prior = (EditText) findViewById(R.id.ed4);
+        prior.setVisibility(View.INVISIBLE );
+        clearValue(view);
+
+    }
+
+
+    public void radioBut (View view){
+
+
+        EditText prior = (EditText) findViewById(R.id.ed4);
+        prior.setVisibility(View.VISIBLE );
+        clearValue(view);
+
+    }
+
+    public void radiocheck(View view){
+
+        RadioButton fsfc = (RadioButton) findViewById(R.id.radio03);
+        RadioButton sjf = (RadioButton) findViewById(R.id.radio04);
+        RadioButton prio = (RadioButton) findViewById(R.id.radio05);
+        EditText prior = (EditText) findViewById(R.id.ed4);
+        if(fsfc.isChecked()){
+            prior.setVisibility(View.INVISIBLE);
+            calC(view);
+        }
+        if(sjf.isChecked()){
+            prior.setVisibility(View.INVISIBLE);
+            SJF(view);
+        }
+        if(prio.isChecked()){
+
+            prior.setVisibility(View.VISIBLE);
+            SJFPRIO(view);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+   public void SJFPRIO(View view) {
+
+
+        if (setter) {
+            int index = 0;
+            int sjfholder = 0;
+            double holder = 0;
+
+            double avgholder = 0;
+            int[] burst = new int[100];
+            int[] arrival = new int[100];
+            int[] service = new int[100];
+            int[] average = new int[100];
+            int[] prio = new int[100];
+            int indexsjf = 0;
+            int finder = 0;
+            // FOR SJF METHOD ONLY
+            while (index < tracer) {
+                processor procholder = arrayList.get(index);
+                prio[index] = procholder.getPriority();
+                sjfholder = sjfholder + prio[index];
+                index++;
+            }
+            //----------------------------------------
+            index = 0;
+            while (sjfholder >= finder) {
+                processor procholder;
+
+                while (indexsjf < tracer) {
+                    if(prio[indexsjf]==finder) {
+                        index=indexsjf;
+
+                        procholder = arrayList.get(index);
+                        burst[index] = procholder.getBurstime();
+                        arrival[index] = procholder.getArrivaltime();
+                        service[index] = procholder.getServicetime();
+                        average[index] = textV(procholder.getArrivaltime(), procholder.getServicetime(), index);
+                        avgholder = (double) average[index] + avgholder;
+
+
+                        colorset=index;
+                        holder = burst[index] + holder;
+                        v(burst[index], (int) holder);
+                        burst[index] = (int) holder;
+
+
+
+
+                        index++;
+
+
+                    }
+                    indexsjf++;
+                }
+                indexsjf=0;
+                finder++;
+            }
+            finishView(avgholder / tracer);
+        }
+    }
 
 }
 

@@ -44,12 +44,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Processer: "
+            android:text="P: "
             />
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Burst Time"
+            android:hint="Burst"
             android:textSize="16dp"
             android:id="@+id/ed1"
             android:inputType="number"
@@ -57,7 +57,7 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Arrival Time"
+            android:hint="Arrival"
             android:id="@+id/ed2"
             android:textSize="16dp"
             android:inputType="number"
@@ -65,16 +65,20 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Service Time"
+            android:hint="Service"
             android:id="@+id/ed3"
             android:textSize="16dp"
             android:inputType="number"
             />
-        <Button
+        <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ok"
-            android:onClick="createEditText"
+            android:hint="Priority"
+            android:id="@+id/ed4"
+            android:textSize="16dp"
+            android:inputType="number"
+            android:visibility="invisible"
+
             />
 
     </LinearLayout>
@@ -93,24 +97,31 @@
         android:id="@+id/radio01"
         >
         <RadioButton
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="SJF"
-
-            android:alpha="0.5"
-
-            android:id="@+id/rad1"
-            />
-        <RadioButton
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="FCFS"
-            android:alpha="0.5"
-
-
-            android:id="@+id/rad2"
+            android:checked="true"
+            android:id="@+id/radio03"
+            android:onClick="radioBut2"
             />
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SJF"
+            android:id="@+id/radio04"
+            android:onClick="radioBut1"
+            />
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Priority"
+            android:id="@+id/radio05"
+            android:onClick="radioBut"
+            />
+
     </RadioGroup>
+
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -118,6 +129,14 @@
         android:id="@+id/output3"
         android:layout_marginTop="32dp"
         >
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OK"
+            android:onClick="createEditText"
+            />
+
     </LinearLayout>
 
 
@@ -149,9 +168,10 @@
     android:id="@+id/aya"
     android:enabled="false"
     android:textSize="16dp"
-    android:onClick="calC"
+    android:onClick="radiocheck"
 
     />
+
 
         <Button
             android:layout_width="match_parent"
